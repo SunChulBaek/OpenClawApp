@@ -23,6 +23,27 @@ jobs:
     - name: Install dependencies
       run: flutter pub get
 
+    - name: Restore keystore (if provided)
+      env:
+        KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      run: |
+        if [ -n "$KEYSTORE_BASE64" ]; then
+          mkdir -p ci/keystore
+          echo "$KEYSTORE_BASE64" | base64 --decode > ci/keystore/mykeystore.jks
+          cat > keystore.properties <<EOF
+storeFile=ci/keystore/mykeystore.jks
+storePassword=$KEYSTORE_PASSWORD
+keyAlias=$KEY_ALIAS
+keyPassword=$KEY_PASSWORD
+EOF
+          echo "Keystore restored"
+        else
+          echo "No KEYSTORE_BASE64 secret found, skipping keystore restore"
+        fi
+
     - name: Analyze
       run: flutter analyze || true
 
