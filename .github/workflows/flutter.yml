@@ -44,6 +44,16 @@ EOF
           echo "No KEYSTORE_BASE64 secret found, skipping keystore restore"
         fi
 
+    - name: Check keystore file (debug)
+      run: |
+        if [ -f ci/keystore/mykeystore.jks ]; then
+          echo "keystore exists"
+          ls -la ci/keystore || true
+          echo "size: $(stat -c%s ci/keystore/mykeystore.jks)"
+        else
+          echo "keystore not found"
+        fi
+
     - name: Analyze
       run: flutter analyze || true
 
