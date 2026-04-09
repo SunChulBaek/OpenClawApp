@@ -1,3 +1,6 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -61,3 +64,5 @@ android {
 flutter {
     source = "../.."
 }
+
+// ci: ensure imports present
