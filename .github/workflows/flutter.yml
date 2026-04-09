@@ -33,12 +33,7 @@ jobs:
         if [ -n "$KEYSTORE_BASE64" ]; then
           mkdir -p ci/keystore
           echo "$KEYSTORE_BASE64" | base64 --decode > ci/keystore/mykeystore.jks
-          cat > keystore.properties <<EOF
-storeFile=ci/keystore/mykeystore.jks
-storePassword=$KEYSTORE_PASSWORD
-keyAlias=$KEY_ALIAS
-keyPassword=$KEY_PASSWORD
-EOF
+printf 'storeFile=ci/keystore/mykeystore.jks\nstorePassword=%s\nkeyAlias=%s\nkeyPassword=%s\n' "$KEYSTORE_PASSWORD" "$KEY_ALIAS" "$KEY_PASSWORD" > keystore.properties
           echo "Keystore restored"
         else
           echo "No KEYSTORE_BASE64 secret found, skipping keystore restore"
